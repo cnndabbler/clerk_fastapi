@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clerk JavaScript Starter</title>
+  </head>
+
+  <body>
+    <!-- Main application container -->
+    <div id="app"></div>
+
+    <!-- Clerk script tag: Loads the Clerk JavaScript library -->
+    <script
+      async
+      crossorigin="anonymous"
+      data-clerk-publishable-key="pk_test_aGVyb2ljLXNoZWVwLTgzLmNsZXJrLmFjY291bnRzLmRldiQ"
+      onload="window.Clerk.load()"
+      src="https://heroic-sheep-83.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"
+      type="text/javascript"
+    ></script>
+
+    <script>
+      // Main application logic
+      window.addEventListener("load", async function () {
+        // Initialize Clerk
+        await Clerk.load();
+
+        if (Clerk.user) {
+          // User is authenticated
+          const user = Clerk.user;
+          console.log('User ID:', user.id);
+          console.log('First Name:', user.firstName);
+          console.log('Last Name:', user.lastName);
+          console.log('Email Addresses:', user.emailAddresses[0].emailAddress);
+
+          // Update the DOM with user information
+          document.getElementById("app").innerHTML = `
+            <div id="user-button"></div>
+            <p id="login-success">User ${user.firstName} ${user.lastName} with email ${user.emailAddresses[0].emailAddress} logged in</p>
+            <p id="api-response"></p>
+          `;
+
+          const session = Clerk.session;
+
+          console.log('Session ID:', session.id);
+          console.log('User ID:', session.userId);
+          console.log('Session Expires At:', session.expiresAt);
+
+          // Get the session token for API authentication
+          const sessionToken = await Clerk.session.getToken();
+
+          console.log('Session Token:', sessionToken);
+
+          try {
+            // Make a request to the protected backend route
+            const response = await fetch(`http://localhost:8069/protected?session_id=${session.id}`, {
+              headers: {
+                'Authorization': `Bearer ${sessionToken}`,
+                'Content-Type': 'application/json',
+              },
+            });
+
+            const data = await response.json();
+            console.log('API Response:', data['message']);
+            // Display the API response on the page
+            document.getElementById("api-response").textContent = `FASTAPI Response: ${JSON.stringify(data['message'])}`;
+          } catch (error) {
+            console.error('Error calling API:', error);
+            document.getElementById("api-response").textContent = `Error calling API: ${error.message}`;
+          }
+
+          // Mount the Clerk user button
+          const userButtonDiv = document.getElementById("user-button");
+          Clerk.mountUserButton(userButtonDiv);
+
+        } else {
+          // User is not authenticated
+          document.getElementById("app").innerHTML = `
+            <div id="sign-in"></div>
+          `;
+
+          // Mount the Clerk sign-in component
+          const signInDiv = document.getElementById("sign-in");
+          Clerk.mountSignIn(signInDiv);
+        }
+      });
+    </script>
+  </body>
+</html>
