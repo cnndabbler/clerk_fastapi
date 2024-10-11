@@ -230,9 +230,7 @@ This integration ensures a seamless experience from frontend login to backend-pr
 
 ### 9. Further Reading
 - [Clerk Documentation](https://clerk.com/docs)
-- [Clerk Python SDK on GitHub](https://github.com/clerkdev/clerk-sdk-python)
-- [Best Practices for Authentication in SaaS Apps](https://example.com/auth-best-practices)
-- [Guide to FastAPI Authentication with Clerk](https://example.com/fastapi-clerk-guide)
+- [Clerk Python SDK on GitHub](https://github.com/clerk/clerk-sdk-python)
 
 ---
 
