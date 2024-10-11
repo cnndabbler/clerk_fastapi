@@ -2,6 +2,9 @@
 
 This project demonstrates how to implement Clerk authentication in a web application with a FastAPI backend and a vanilla JavaScript frontend.
 
+## Podcast
+[![Listen on Spotify](https://img.shields.io/badge/Spotify-Podcast-green?style=for-the-badge&logo=spotify)](https://spotifyanchor-web.app.link/e/xCgmgdPMANb)
+
 ## Project Structure
 
 ```
